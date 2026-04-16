@@ -6,10 +6,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class 	WebScrappingApplication {
+public class 	 WebScrappingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WebScrappingApplication.class, args);
+
 	}
 
 }

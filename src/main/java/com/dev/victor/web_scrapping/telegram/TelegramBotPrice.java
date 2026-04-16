@@ -24,15 +24,14 @@ public class TelegramBotPrice extends TelegramLongPollingBot {
 
     private final ProdutoMonitoradoService produtoMonitoradoService;
     private final ScrapperService buscaNomePreco;
-    private final SchedulerMontoramento monitorDePrecos;
+
 
     public TelegramBotPrice(
             @Value("${telegram.bot.token}") String token,
-            ProdutoMonitoradoService produtoService, ScrapperService scrapperService, SchedulerMontoramento schedulerMontoramento) {
+            ProdutoMonitoradoService produtoService, ScrapperService scrapperService) {
         super(token);
         this.produtoMonitoradoService = produtoService;
         this.buscaNomePreco = scrapperService;
-        this.monitorDePrecos = schedulerMontoramento;
     }
 
 
@@ -73,28 +72,25 @@ public class TelegramBotPrice extends TelegramLongPollingBot {
             }
         }
     }
-    public List<ProdutoMonitorado> sendPromo () {
-        List<ProdutoMonitorado> produtoMonitorados = monitorDePrecos.verifPrice();
-        try {
-            SendMessage ofertas = new SendMessage();
-            for (ProdutoMonitorado produto : produtoMonitorados){
-                if (produtoMonitorados.contains(produto)){
-                    ofertas.setChatId(produto.getChatId().toString());
-                    ofertas.setText(String.format(
-                            "📉 Boa notícia! O preço do produto que você está monitorando baixou!\n\n" +
-                                    "🛍️ Produto: %s\n" +
-                                    "💸 Preço anterior: R$ %s\n" +
-                                    "🔥 Novo preço: R$ %s\n" +
-                                    "🚀 Aproveite essa oportunidade antes que o valor mude novamente!\n\n" +
-                                    "🔗 Link do produto:\n%s",
-                            produto.getNomeProduto(),
-                            produto.getPrecoAtual(),
-                            produto.getPrecoAnterior(),
-                            produto.getUrl());
 
-            }
-            return
-        } catch (Exception e) {
+    public void sendAlert(ProdutoMonitorado produto) {
+        SendMessage ofertas = new SendMessage();
+        ofertas.setChatId(produto.getChatId().toString());
+        ofertas.setText(String.format(
+                "📉 Boa notícia! O preço do produto que você está monitorando baixou!\n\n" +
+                        "🛍️ Produto: %s\n" +
+                        "💸 Preço anterior: R$ %s\n" +
+                        "🔥 Novo preço: R$ %s\n" +
+                        "🚀 Aproveite essa oportunidade antes que o valor mude novamente!\n\n" +
+                        "🔗 Link do produto:\n%s",
+                produto.getNomeProduto(),
+                produto.getPrecoAnterior(),
+                produto.getPrecoAtual(),
+                produto.getUrl()));
+
+        try {
+            execute(ofertas);
+        } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
     }
