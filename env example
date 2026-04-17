@@ -1,0 +1,19 @@
+# =========================
+# Banco de Dados (Docker)
+# =========================
+POSTGRES_USER=seu_usuario
+POSTGRES_PASSWORD=sua_senha
+POSTGRES_DB=nome_do_banco
+
+# =========================
+# Aplicação (Spring)
+# =========================
+DB_URL=jdbc:postgresql://localhost:5432/nome_do_banco
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+
+# =========================
+# Telegram Bot
+# =========================
+BOT_TOKEN=seu_bot_token_aqui
+BOT_USERNAME=seu_bot_username
